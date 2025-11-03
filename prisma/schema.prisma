@@ -12,16 +12,48 @@ datasource db {
 }
 
 model User {
-  id        String @id @default(cuid())
-  username  String
+  userId    String @id @default(cuid())
+  username  String @unique
   createdAt DateTime @default(now())
-  jams      JamSession[]
+  ownedRooms Room[] @relation("RoomOwner")
+  participatedRooms Participant[]
+  sentInvitations Invitation[] @relation("Inviter")
 }
 
-model JamSession {
-  id        String @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now())
-  events    Json // Array of note events (for recording)
-  users     User[]
+model Instrument {
+  instrumentId String @id @default(cuid())
+  name         String
+  participants Participant[]
+}
+
+model Room {
+  roomId      String @id @default(cuid())
+  owner       User   @relation("RoomOwner", fields: [ownerId], references: [userId])
+  ownerId     String
+  participants Participant[]
+  maxUsers    Int @default(5)
+  createdAt   DateTime @default(now())
+  invitations Invitation[]
+}
+
+model Participant {
+  user         User       @relation(fields: [userId], references: [userId])
+  userId       String
+  instrument   Instrument @relation(fields: [instrumentId], references: [instrumentId])
+  instrumentId String
+  room         Room       @relation(fields: [roomId], references: [roomId])
+  roomId       String
+
+  @@id([userId, roomId])
+}
+
+model Invitation {
+  invitationId    String   @id @default(cuid())
+  room            Room     @relation(fields: [roomId], references: [roomId])
+  roomId          String
+  inviter         User     @relation("Inviter", fields: [inviterId], references: [userId])
+  inviterId       String
+  inviteeUsername String
+  status          String   @default("pending") // "pending", "accepted", "declined"
+  createdAt       DateTime @default(now())
 }
