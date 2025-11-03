@@ -1,10 +1,24 @@
-# Node + Express Service Starter
+# Collaborative Music App
 
-This is a simple API sample in Node.js with express.js based on [Google Cloud Run Quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-nodejs-service).
+This project is a real-time collaborative music application built with Node.js, Express, and Socket.IO. It allows users to jam together in real-time and record their sessions.
+
+## Features
+
+*   **Real-time Collaboration:** Using Socket.IO, users can play music together in real-time.
+*   **Session Recording:** The application records the musical events of a session, allowing for playback.
+*   **Playback API:** An API endpoint is available to retrieve the latest recorded session for a given "room".
 
 ## Getting Started
 
-Server should run automatically when starting a workspace. To run manually, run:
-```sh
-npm run dev
-```
+To get the project running locally, follow these steps:
+
+1.  **Install Dependencies:**
+    ```sh
+    npm install
+    ```
+2.  **Run the Development Server:**
+    ```sh
+    npm run start:dev
+    ```
+
+The server will start on `http://localhost:3000`.
