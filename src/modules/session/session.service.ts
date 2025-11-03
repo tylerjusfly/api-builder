@@ -38,14 +38,20 @@ export const getLatestRecording = (roomName: string) => {
 export const addNoteEvent = async (roomName: string, event: { type: 'noteOn' | 'noteOff', data: any, time: number }) => {
     const state = roomRecordingState.get(roomName);
     if (state?.isRecording && state.jamSessionId) {
-        await prisma.jamSession.update({
+        // First, get the current session
+        const session = await prisma.jamSession.findUnique({
             where: { id: state.jamSessionId },
-            data: {
-                events: {
-                    push: event,
-                },
-            },
         });
+
+        if (session) {
+            // Annoyingly, Prisma's JSON update isn't a simple push. We have to read, modify, and write.
+            const updatedEvents = Array.isArray(session.events) ? [...session.events, event] : [event];
+
+            await prisma.jamSession.update({
+                where: { id: state.jamSessionId },
+                data: { events: updatedEvents },
+            });
+        }
     }
 };
 
@@ -58,6 +64,8 @@ export const startRecording = (roomName: string, jamSessionId: string) => {
 export const stopRecording = (roomName: string) => {
     const state = roomRecordingState.get(roomName);
     if (state) {
+        // We don't need to do anything here because events are already saved.
+        // We just update the in-memory state to stop recording.
         roomRecordingState.set(roomName, { ...state, isRecording: false });
     }
 };
