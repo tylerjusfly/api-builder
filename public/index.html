@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaborative Piano</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Real-Time Collaborative Piano</h1>
+
+    <div class="controls">
+        <input type="text" id="roomName" placeholder="Enter Room Name" value="main-room">
+        <button id="joinRoomBtn">Join Room</button>
+        <button id="startRecordingBtn">Start Recording</button>
+        <button id="stopRecordingBtn">Stop Recording</button>
+        <button id="playbackBtn">Playback Last Recording</button>
+    </div>
+
+    <div id="piano" class="piano-container">
+        <!-- White keys -->
+        <div class="key white" data-note="C4"></div>
+        <div class="key white" data-note="D4"></div>
+        <div class="key white" data-note="E4"></div>
+        <div class="key white" data-note="F4"></div>
+        <div class="key white" data-note="G4"></div>
+        <div class="key white" data-note="A4"></div>
+        <div class="key white" data-note="B4"></div>
+        <div class="key white" data-note="C5"></div>
+
+        <!-- Black keys -->
+        <div class="key black" data-note="C#4" style="left: 40px;"></div>
+        <div class="key black" data-note="D#4" style="left: 100px;"></div>
+        <div class="key black" data-note="F#4" style="left: 220px;"></div>
+        <div class="key black" data-note="G#4" style="left: 280px;"></div>
+        <div class="key black" data-note="A#4" style="left: 340px;"></div>
+    </div>
+
+    <div id="status"></div>
+
+    <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/script.js"></script>
+</body>
+</html>
