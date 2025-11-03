@@ -4,6 +4,8 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { registerSessionHandlers } from './modules/session/session.handlers';
 import { sessionRouter } from './modules/session/session.router';
+import userRouter from './modules/user/user.router';
+import roomRouter from './modules/room/room.router';
 import path from 'path';
 
 const app = express();
@@ -26,6 +28,9 @@ app.use(express.json());
 
 // Register the session API routes
 app.use('/api', sessionRouter);
+app.use('/api/users', userRouter);
+app.use('/api/rooms', roomRouter);
+
 
 // --- Socket.IO Connection Handling ---
 

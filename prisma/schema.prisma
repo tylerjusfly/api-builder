@@ -14,6 +14,8 @@ datasource db {
 model User {
   userId    String @id @default(cuid())
   username  String @unique
+  securityQuestion String
+  securityAnswer   String
   createdAt DateTime @default(now())
   ownedRooms Room[] @relation("RoomOwner")
   participatedRooms Participant[]
@@ -34,6 +36,7 @@ model Room {
   maxUsers    Int @default(5)
   createdAt   DateTime @default(now())
   invitations Invitation[]
+  jamSessions JamSession[]
 }
 
 model Participant {
@@ -56,4 +59,13 @@ model Invitation {
   inviteeUsername String
   status          String   @default("pending") // "pending", "accepted", "declined"
   createdAt       DateTime @default(now())
+}
+
+model JamSession {
+  id String @id @default(cuid())
+  name String
+  events Json
+  createdAt DateTime @default(now())
+  roomId String
+  room Room @relation(fields: [roomId], references: [roomId])
 }

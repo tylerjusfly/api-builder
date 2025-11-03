@@ -2,6 +2,8 @@
 CREATE TABLE "User" (
     "userId" TEXT NOT NULL PRIMARY KEY,
     "username" TEXT NOT NULL,
+    "securityQuestion" TEXT NOT NULL,
+    "securityAnswer" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

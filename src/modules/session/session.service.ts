@@ -4,22 +4,14 @@ import { prisma } from '../../db';
 // A simple in-memory store for the recording state of each room
 const roomRecordingState = new Map<string, { isRecording: boolean; jamSessionId: string | null }>();
 
-// --- User Service Functions ---
-
-export const createUser = (id: string, username: string) => {
-  return prisma.user.create({ data: { id, username } });
-};
-
-export const deleteUser = (id: string) => {
-  return prisma.user.delete({ where: { id } });
-};
 
 // --- Jam Session Service Functions ---
 
-export const createJamSession = async (roomName: string) => {
+export const createJamSession = async (roomName: string, roomId: string) => {
     const newJamSession = await prisma.jamSession.create({
         data: {
-            name: roomName,
+            name: `jam-session-${roomName}`,
+            roomId: roomId,
             events: [], // Initialize with an empty events array
         },
     });

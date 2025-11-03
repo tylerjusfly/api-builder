@@ -1,8 +1,6 @@
 
 import { Server, Socket } from 'socket.io';
 import {
-  createUser, 
-  deleteUser,
   createJamSession,
   addNoteEvent,
   startRecording,
@@ -16,7 +14,6 @@ export function registerSessionHandlers(io: Server, socket: Socket) {
         socket.join(roomName);
         console.log(`User ${socket.id} joined room ${roomName}`);
         // Create a user record when they join a room
-        createUser(socket.id, `user-${socket.id}`).catch(console.error);
     };
 
     const leaveRoom = (roomName: string) => {
@@ -40,14 +37,14 @@ export function registerSessionHandlers(io: Server, socket: Socket) {
         socket.to(roomName).emit('noteOff', data);
     };
 
-    const handleStartRecording = async (roomName: string) => {
+    const handleStartRecording = async (roomName: string, id: string) => {
         if (isRoomRecording(roomName)) {
             console.log(`Room ${roomName} is already recording.`);
             return;
         }
         
         console.log(`Started recording in room ${roomName}`);
-        const newJamSession = await createJamSession(roomName);
+        const newJamSession = await createJamSession(roomName, id);
         startRecording(roomName, newJamSession.id);
         
         io.to(roomName).emit('recordingStarted');
@@ -62,9 +59,9 @@ export function registerSessionHandlers(io: Server, socket: Socket) {
     const handleDisconnect = () => {
         console.log(`User ${socket.id} disconnected`);
         // Clean up user from the database
-        deleteUser(socket.id).catch(err => {
-            console.log(`Could not find user ${socket.id} to delete. They might have been a listener without joining a room.`);
-        });
+        // deleteUser(socket.id).catch(err => {
+        //     console.log(`Could not find user ${socket.id} to delete. They might have been a listener without joining a room.`);
+        // });
     };
 
     // Register all event listeners for the socket
