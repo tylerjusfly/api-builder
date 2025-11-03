@@ -4,6 +4,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { registerSessionHandlers } from './modules/session/session.handlers';
 import { sessionRouter } from './modules/session/session.router';
+import path from 'path';
 
 const app = express();
 const httpServer = createServer(app);
@@ -13,11 +14,20 @@ const io = new Server(httpServer, {
   },
 });
 
+// --- Middleware ---
+
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
+// --- API Routes ---
+
 // Register the session API routes
 app.use('/api', sessionRouter);
+
+// --- Socket.IO Connection Handling ---
 
 // Handle new socket connections
 io.on('connection', (socket) => {
@@ -26,10 +36,7 @@ io.on('connection', (socket) => {
   registerSessionHandlers(io, socket);
 });
 
-// Simple route for health checks
-app.get('/', (req, res) => {
-  res.send('Server is running');
-});
+// --- Server Initialization ---
 
 const port = process.env.PORT || 3000;
 
